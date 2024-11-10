@@ -1,0 +1,74 @@
+//3
+import java.util.Scanner;
+
+class FileProcessor {
+    private String filename;
+    private String content;
+
+    public FileProcessor(String filename, String content) {
+        this.filename = filename;
+        this.content = content;
+    }
+
+    public void processFile() {
+        Thread readThread = new Thread(() -> read());
+        Thread transformThread = new Thread(() -> transform());
+        Thread saveThread = new Thread(() -> save());
+
+        try {
+            readThread.start();
+            readThread.join();  // Ensure reading completes before transforming
+            transformThread.start();
+            transformThread.join();  // Ensure transforming completes before saving
+            saveThread.start();
+            saveThread.join();  // Ensure saving completes for final output
+        } catch (InterruptedException e) {
+            System.out.println("Processing interrupted for file: " + filename);
+        }
+    }
+
+    private void read() {
+        System.out.println("Reading file: " + filename);
+    }
+
+    private void transform() {
+        content = content.toUpperCase();  // Example transformation
+        System.out.println("Transforming content for file: " + filename);
+    }
+
+    private void save() {
+        System.out.println("Saving file: " + filename + " with content: " + content);
+    }
+}
+
+class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int m = scanner.nextInt();
+        scanner.nextLine();  // Consume newline
+
+        for (int i = 0; i < m; i++)
+        {
+            String filename = scanner.nextLine();
+            String content = scanner.nextLine();
+
+            FileProcessor processor = new FileProcessor(filename, content);
+            processor.processFile();
+        }
+
+    }
+}
+
+//Input:
+2
+java1.txt
+hello world
+java2.txt
+multithreading
+//Output:
+Reading file: java1.txt
+Transforming content for file: java1.txt
+Saving file: java1.txt with content: HELLO WORLD
+Reading file: java2.txt
+Transforming content for file: java2.txt
+Saving file: java2.txt with content: MULTITHREADING
