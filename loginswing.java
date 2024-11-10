@@ -1,53 +1,90 @@
+package Swings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-class SimpleLoginForm extends JFrame {
-    private JTextField usernameField, emailField;
+public class Lab2 extends JFrame implements ActionListener {
+    private JTextField nameField, emailField, phoneField;
     private JPasswordField passwordField;
+    private JButton submitButton;
+    private JLabel messageLabel;
 
-    public SimpleLoginForm() {
-        setTitle("Login Form");
-        setSize(300, 200);
+    public Lab2() {
+        setTitle("User Registration Form");
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(4, 2));
+        setLayout(new GridLayout(6, 2, 5, 5));
 
-        // Create components
-        usernameField = new JTextField();
+        JLabel nameLabel = new JLabel("Name:");
+        nameField = new JTextField();
+        
+        JLabel emailLabel = new JLabel("Email:");
         emailField = new JTextField();
+        
+        JLabel phoneLabel = new JLabel("Phone:");
+        phoneField = new JTextField();
+        
+        JLabel passwordLabel = new JLabel("Password:");
         passwordField = new JPasswordField();
-        JButton submitButton = new JButton("Submit");
 
-        // Add action listener to the submit button
-        submitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleSubmit();
-            }
-        });
+        submitButton = new JButton("Submit");
+        submitButton.addActionListener(this);
 
-        // Add components to the frame
-        add(new JLabel("Username:"));
-        add(usernameField);
-        add(new JLabel("Email:"));
+        messageLabel = new JLabel("", SwingConstants.CENTER);
+
+        add(nameLabel);
+        add(nameField);
+        add(emailLabel);
         add(emailField);
-        add(new JLabel("Password:"));
+        add(phoneLabel);
+        add(phoneField);
+        add(passwordLabel);
         add(passwordField);
         add(submitButton);
+        add(messageLabel);
 
         setVisible(true);
     }
 
-    private void handleSubmit() {
-        String username = usernameField.getText();
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String name = nameField.getText();
         String email = emailField.getText();
+        String phone = phoneField.getText();
         String password = new String(passwordField.getPassword());
 
-        JOptionPane.showMessageDialog(this, "Username: " + username + "\nEmail: " + email + "\nPassword: " + password);
+        if (!isValidName(name)) {
+            messageLabel.setText("Error: Invalid name");
+        } else if (!isValidEmail(email)) {
+            messageLabel.setText("Error: Invalid email");
+        } else if (!isValidPhone(phone)) {
+            messageLabel.setText("Error: Invalid phone number");
+        } else if (!isValidPassword(password)) {
+            messageLabel.setText("Error: Password must be at least 8 characters");
+        } else {
+            messageLabel.setText("Success: Registration complete!");
+        }
+    }
+
+    private boolean isValidName(String name) {
+        return name.matches("[a-zA-Z]+");
+    }
+
+    private boolean isValidEmail(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+    }
+
+    private boolean isValidPhone(String phone) {
+        return phone.matches("\\d{10}");
+    }
+
+    private boolean isValidPassword(String password) {
+        return password.length() >= 8;
     }
 
     public static void main(String[] args) {
-        new SimpleLoginForm();
+        new Lab2();
     }
 }
