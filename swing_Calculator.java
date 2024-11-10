@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SimpleCalculator extends JFrame {
+class SimpleCalculator extends JFrame {
     private JTextField num1Field, num2Field, resultField;
     private JComboBox<String> operationBox;
 
